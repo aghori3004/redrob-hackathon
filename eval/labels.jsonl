@@ -128,3 +128,73 @@
 {"candidate_id": "CAND_0032179", "tier": 2, "stratum": "ml_titled", "note": "CV title, fraud serving-side; Sydney though relocating"}
 {"candidate_id": "CAND_0075481", "tier": 1, "stratum": "ml_titled", "note": "Entire career at TCS+Infosys (consulting-only JD red line); lightweight recsys features"}
 {"candidate_id": "CAND_0081932", "tier": 1, "stratum": "ml_titled", "note": "Entire career = single Tech Mahindra services job; NLP production but consulting-only"}
+{"candidate_id": "CAND_0091345", "tier": 0, "stratum": "adjacent_in", "note": "non-tech career whose summary recites RAG/vector/LangChain keywords \u2014 GenAI stuffer that slipped the gate via evidence-phrase path"}
+{"candidate_id": "CAND_0093283", "tier": 0, "stratum": "adjacent_in", "note": "non-tech career whose summary recites RAG/vector/LangChain keywords \u2014 GenAI stuffer that slipped the gate via evidence-phrase path"}
+{"candidate_id": "CAND_0054660", "tier": 0, "stratum": "adjacent_in", "note": "non-tech career whose summary recites RAG/vector/LangChain keywords \u2014 GenAI stuffer that slipped the gate via evidence-phrase path"}
+{"candidate_id": "CAND_0048533", "tier": 0, "stratum": "adjacent_in", "note": "non-tech career whose summary recites RAG/vector/LangChain keywords \u2014 GenAI stuffer that slipped the gate via evidence-phrase path"}
+{"candidate_id": "CAND_0034144", "tier": 0, "stratum": "adjacent_in", "note": "non-tech career whose summary recites RAG/vector/LangChain keywords \u2014 GenAI stuffer that slipped the gate via evidence-phrase path"}
+{"candidate_id": "CAND_0014209", "tier": 2, "stratum": "adjacent_in", "note": "SWE@CRED 3.9y, model-serving integration (not the model), Kaggle self-learner"}
+{"candidate_id": "CAND_0068614", "tier": 2, "stratum": "adjacent_in", "note": "Data eng @ PhonePe, warehouse infra, couple small predictive features"}
+{"candidate_id": "CAND_0083492", "tier": 2, "stratum": "adjacent_in", "note": "7y data infra \"makes ML possible\", wants to transition; 5 short stints"}
+{"candidate_id": "CAND_0055627", "tier": 2, "stratum": "adjacent_in", "note": "30% lightweight ML (churn sklearn/XGBoost) + built A/B experimentation framework; self-described non-specialist"}
+{"candidate_id": "CAND_0048368", "tier": 2, "stratum": "adjacent_in", "note": "SWE@Swiggy 6.1y, 30% lightweight ML + experimentation framework"}
+{"candidate_id": "CAND_0026411", "tier": 2, "stratum": "adjacent_in", "note": "Backend/data hybrid, model-serving integration only"}
+{"candidate_id": "CAND_0024921", "tier": 2, "stratum": "adjacent_in", "note": "Data eng 7.4y, serving-integration observability; responsive"}
+{"candidate_id": "CAND_0073533", "tier": 2, "stratum": "adjacent_in", "note": "Analytics eng @ Nykaa, model-serving integration"}
+{"candidate_id": "CAND_0083411", "tier": 2, "stratum": "adjacent_in", "note": "SWE@Swiggy 2.7y, Kafka/Spark feature pipelines aligned with DS team; junior"}
+{"candidate_id": "CAND_0052440", "tier": 2, "stratum": "adjacent_in", "note": "Sr SWE@Swiggy in Seattle but relocating; data warehouse work, small ML features"}
+{"candidate_id": "CAND_0082053", "tier": 2, "stratum": "adjacent_in", "note": "Analytics eng 7.2y, warehouse + small ML features, relocating"}
+{"candidate_id": "CAND_0074104", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0048209", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0050319", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0068363", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0050113", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0008615", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0038670", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0005496", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0023928", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0006340", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0056388", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0090661", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0000417", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0051648", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0031062", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0040234", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0050997", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0040065", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0020304", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0093797", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0015124", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0049194", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0017133", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0032235", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0010994", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0012893", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0012415", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0008549", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0090103", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0051073", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0066078", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0010873", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0035391", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0060738", "tier": 1, "stratum": "adjacent_in", "note": "wrong-specialty tech or geo-capped or services-only; AI as self-learner hobby only, no production ML/IR"}
+{"candidate_id": "CAND_0072943", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0028103", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0028634", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0076385", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0094911", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0096185", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0010425", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0034519", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0009564", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0078278", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0084158", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0096204", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0090283", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0015555", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0067387", "tier": 0, "stratum": "random", "note": "non-tech career (incl. GenAI-keyword variants)"}
+{"candidate_id": "CAND_0075468", "tier": 1, "stratum": "random", "note": "wrong-specialty tech, AI hobbyist only"}
+{"candidate_id": "CAND_0033442", "tier": 1, "stratum": "random", "note": "wrong-specialty tech, AI hobbyist only"}
+{"candidate_id": "CAND_0021831", "tier": 1, "stratum": "random", "note": "wrong-specialty tech, AI hobbyist only"}
+{"candidate_id": "CAND_0039823", "tier": 1, "stratum": "random", "note": "wrong-specialty tech, AI hobbyist only"}
+{"candidate_id": "CAND_0062799", "tier": 2, "stratum": "random", "note": "data/analytics hybrid, 30% lightweight ML, services current"}
