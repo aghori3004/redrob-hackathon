@@ -255,6 +255,16 @@ def disqualifier_multiplier(cand, text, evidence):
             mult *= 0.4
             hits.append("non_coding_senior")
 
+    # Outside India and not willing to relocate: the JD offers no visa
+    # sponsorship and sketches an in-India ideal. With 75K India-based
+    # candidates available this is effectively disqualifying for a top-100,
+    # so it must be multiplicative — as a weighted component it was provably
+    # outweighed by core strength (caught by eval/invariants.py).
+    profile = cand.get("profile", {})
+    if profile.get("country") != "India" and not cand.get("redrob_signals", {}).get("willing_to_relocate"):
+        mult *= 0.2
+        hits.append("geo_ineligible")
+
     # "Do NOT want": title-chaser hopping pattern (3+ jobs, median stint <18mo).
     stints = sorted(j.get("duration_months", 0) or 0 for j in career)
     if len(stints) >= 3:
