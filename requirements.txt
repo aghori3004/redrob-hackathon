@@ -1,0 +1,3 @@
+# Core ranking pipeline (rank.py) is stdlib-only: no dependencies required.
+# Optional extras used by the sandbox app and experiments are listed in
+# requirements-extra.txt as they are added.
