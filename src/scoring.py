@@ -41,6 +41,16 @@ TIER_B_PHRASES = {
     "features": re.compile(r"feature (?:engineering|pipeline|store)", re.I),
 }
 
+# The JD's "absolutely need" heart: production ranking / retrieval /
+# recommendation / search and their evaluation. Depth across these distinct
+# capabilities is what separates a tier-5 (ideal) from a tier-3 (relevant)
+# in the labeling rubric, so core_relevance grades the *count* of these,
+# not mere presence. `embeddings` is supporting evidence, not core IR.
+CORE_IR_KEYS = {
+    "learning_to_rank", "ranking", "recommendation",
+    "retrieval", "ranking_eval", "vector_search",
+}
+
 ML_TITLE_RE = re.compile(
     r"machine learning|ml engineer|\bml\b|ai engineer|ai research|ai specialist"
     r"|data scien|nlp|recommendation|search engineer|applied scientist|deep learning",
@@ -99,7 +109,17 @@ def core_relevance(cand, text):
     # Distinct evidence types matter, not occurrence counts — descriptions
     # repeat verbatim from a template pool, so counting occurrences would
     # reward long histories, not breadth of experience.
-    text_score = min(1.0, len(a_hits) * 0.25 + len(b_hits) * 0.08)
+    ir_hits = [k for k in a_hits if k in CORE_IR_KEYS]
+    # Depth of distinct core-IR capabilities is the dominant relevance
+    # signal: 5+ of {LTR, ranking, recommendation, retrieval, ranking_eval,
+    # vector_search} = ideal/tier-5 territory; 2-3 = merely relevant. This
+    # no longer saturates at 4 generic tier-A hits the way the old formula
+    # did (which scored tier-5s and tier-3s identically at ~1.0).
+    ir_score = min(1.0, len(ir_hits) / 5.0)
+    # Supporting ML/NLP/embedding evidence — useful but not differentiating.
+    support_n = len(b_hits) + (1 if "embeddings" in a_hits else 0)
+    support_score = min(1.0, support_n / 4.0)
+    text_score = 0.8 * ir_score + 0.2 * support_score
 
     current = cand.get("profile", {}).get("current_title", "")
     past = " | ".join(j.get("title", "") for j in cand.get("career_history", []))
@@ -112,7 +132,12 @@ def core_relevance(cand, text):
     else:
         title_score = 0.1
 
-    return 0.5 * title_score + 0.5 * text_score, {"tier_a": a_hits, "tier_b": b_hits, "title_score": title_score}
+    # Lean on text evidence over title: every ML-titled candidate scores
+    # title=1.0, so title alone can't order the top — depth of IR evidence
+    # must drive the separation.
+    return 0.3 * title_score + 0.7 * text_score, {
+        "tier_a": a_hits, "tier_b": b_hits, "ir": ir_hits, "title_score": title_score,
+    }
 
 
 def product_company_score(cand):
@@ -201,11 +226,15 @@ def external_validation(cand):
     return (0.5 + 0.5 * min(gh, 100) / 100), {"github": gh}
 
 
+# Weights lean hard on core relevance: the labeling rubric tiers candidates
+# primarily on depth of production ranking/retrieval evidence, and
+# product-company fraction proved weakly correlated with the hand labels
+# (tier-5s appear at 0.32 and 0.84; a tier-2 at 1.0), so it is down-weighted.
 FIT_WEIGHTS = {
-    "core_relevance": 0.55,
-    "product_company": 0.12,
-    "experience": 0.12,
-    "logistics": 0.13,
+    "core_relevance": 0.62,
+    "product_company": 0.06,
+    "experience": 0.14,
+    "logistics": 0.10,
     "education": 0.04,
     "external_validation": 0.04,
 }
