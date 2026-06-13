@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.loader import iter_candidates
 from src.filters import honeypot_flags, passes_relevance_gate
 from src.scoring import score_candidate, _career_text
+from src.reasoning import reasoning_for
 from src import embedding
 
 TOP_N = 100
@@ -66,7 +67,7 @@ def run(candidates_path, out_path, verbose=True):
         writer = csv.writer(f)
         writer.writerow(["candidate_id", "rank", "score", "reasoning"])
         for rank, (score, cid, cand, evidence) in enumerate(top, start=1):
-            writer.writerow([cid, rank, f"{score:.6f}", ""])
+            writer.writerow([cid, rank, f"{score:.6f}", reasoning_for(cand, evidence, rank)])
 
     if verbose:
         elapsed = time.time() - t0
