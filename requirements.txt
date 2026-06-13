@@ -1,3 +1,13 @@
-# Core ranking pipeline (rank.py) is stdlib-only: no dependencies required.
-# Optional extras used by the sandbox app and experiments are listed in
-# requirements-extra.txt as they are added.
+# Reproduction dependencies for rank.py (produces the submitted CSV).
+#
+# The core ranker (loader, filters, scoring, behavioral, reasoning) is pure
+# stdlib and runs with NO dependencies. These two packages enable the adopted
+# embedding blend (Phase 4), which lifts the local composite 0.84 -> 0.89.
+# If they are absent, rank.py automatically falls back to the rules-only
+# scorer and still produces a valid ranking — so the repo always runs.
+#
+# The embedding model is fetched once at build time into ./models/ (see
+# scripts/fetch_model.py / Dockerfile); the ranking step itself makes no
+# network calls.
+numpy>=1.26,<3
+fastembed==0.8.0   # ONNX MiniLM (all-MiniLM-L6-v2); pulls onnxruntime + tokenizers

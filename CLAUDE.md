@@ -50,14 +50,34 @@ extractable via zipfile → word/document.xml).
 - Pool: 75% India; ~726 ML/AI-titled candidates are the real competition; gold pockets:
   Recommendation Systems Engineer ×26, Search Engineer ×23, ML Engineer ×167.
 
-## Status
+## Status — all phases complete (pipeline is submission-ready)
 
-- Phase 1 done (commit bf3810f): loader + filters; funnel = 60 honeypots / 80,915
-  gated / 19,025 shortlisted in ~58s.
-- Phase 2 done: scoring.py (6 fit components + JD-severity disqualifier multipliers)
-  + behavioral.py (availability multiplier [0.5,1.0], fixed REFERENCE_DATE 2026-06-01).
-  Full run 91s; top 10 = India-based RecSys/Search/ML engineers at product companies,
-  zero disqualifier hits. submission.csv has empty reasoning until Phase 5.
-- Next: Phase 3 eval framework (rubric, labeled set, gold pool, invariants, runs.md
-  regression log) → embeddings A/B → reasoning → packaging.
-  Full plan: C:\Users\divya\.claude\plans\read-the-readme-docx-inside-wise-crescent.md
+- **Phase 1** (bf3810f): loader + filters; funnel = 60 honeypots / 80,915 gated /
+  19,025 shortlisted.
+- **Phase 2** (f170dae): scoring.py (6 fit components + JD-severity disqualifier
+  multipliers) + behavioral.py (availability multiplier [0.5,1.0], fixed
+  REFERENCE_DATE 2026-06-01).
+- **Phase 3** (dc29f11..bd804fd): eval framework — rubric, 200 hand labels,
+  contest-exact metrics, invariant suite, runs.md regression log. Baseline
+  composite 0.7107.
+- **Phase 3.5** (f2ee242): regraded core_relevance to grade IR depth (was
+  saturating at 4 tier-A hits, scoring tier-5 == tier-3). Reweighted core
+  0.55->0.62, product 0.12->0.06. composite 0.7107 -> 0.8429, NDCG@10
+  0.5921 -> 0.8035, P@10 1.0.
+- **Phase 4** (c7af9e9, 77a9264): embedding A/B test ADOPTED. MiniLM JD-cosine,
+  blended at weight 0.10 via a fixed set-independent transform, on the rules
+  top-3000 only. composite -> 0.8911, NDCG@10 -> 0.8737. Model is offline/local
+  (src/embedding.py, scripts/fetch_model.py, ./models/ gitignored). Falls back to
+  rules-only if deps/model absent. Full-pool run ~140s.
+- **Phase 5** (c6f4a35): src/reasoning.py — evidence-based per-candidate reasoning
+  (hallucination-proof: only fields the scorer read). Wired into rank.py CSV.
+- **Phase 6**: packaging — requirements{,-app}.txt, Dockerfile (build-time model
+  fetch, offline ranking), app.py (Gradio sandbox), README, submission_metadata.yaml.
+  Official validate_submission.py: "Submission is valid."; all invariants pass.
+
+### Remaining human-only TODOs before final portal submission
+- Fill submission_metadata.yaml: team_name, phone, sandbox_link.
+- Publish the HuggingFace Space (push repo + model fetch) and paste its URL.
+- Eyeball the top ~20 profiles; submit a safe v1 early, keep 2 of 3 slots.
+
+Full plan: C:\Users\divya\.claude\plans\read-the-readme-docx-inside-wise-crescent.md

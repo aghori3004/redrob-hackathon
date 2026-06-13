@@ -1,0 +1,4 @@
+# Sandbox app (app.py) — HuggingFace Spaces / local Gradio demo.
+# Includes the reproduction deps plus Gradio.
+-r requirements.txt
+gradio>=4.0,<5

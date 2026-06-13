@@ -1,0 +1,85 @@
+# Redrob Hackathon — Submission Metadata
+# (Fill the three TODO fields before final portal submission: team_name,
+#  phone, and sandbox_link once the HuggingFace Space is published.)
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "TODO-your-team-name"        # TODO: set your portal team name
+
+primary_contact:
+  name: "Divyansh Gangwar"
+  email: "divyanshgangwar3004@gmail.com"
+  phone: "+91-XXXXXXXXXX"               # TODO: contact number for top-50/top-10 outreach
+
+team_members:
+  - name: "Divyansh Gangwar"
+    email: "divyanshgangwar3004@gmail.com"
+    role: "Solo — ML / Backend"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/aghori3004/redrob-hackathon"
+
+sandbox_link: "https://huggingface.co/spaces/TODO/redrob-ranker"  # TODO: publish Space, paste URL
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Local Windows 11 box"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11.15"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false      # model is cached locally; ranking is offline
+  pre_computation_required: true          # one-time embedding-model fetch at build (no training)
+  pre_computation_time_minutes: 1
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Claude"
+
+ai_usage_summary: |
+  Used Claude (Claude Code) for architectural discussion, implementation,
+  code review, and writing the local evaluation harness. All design decisions
+  (scoring components, the embedding A/B test, weights) were driven by local
+  evaluation metrics. No candidate data was sent to any hosted LLM — the
+  ranking pipeline runs fully offline (rules + a local ONNX MiniLM model).
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Interpretable rules-first ranker, refined by a small embedding blend.
+  A streaming pass applies honeypot consistency checks (expert-skill-vs-duration,
+  stated-vs-summed experience, impossible dates) and a recall-oriented relevance
+  gate, then scores survivors on six JD-fit components — core IR relevance
+  (graded by depth across learning-to-rank / ranking / recommendation / retrieval /
+  ranking-eval / vector-search), product-company experience, years-of-experience
+  fit (5-9y), location/notice logistics, education, and external validation —
+  combined with multiplicative JD-severity disqualifier penalties (consulting-only,
+  research-only, LLM-wrapper, CV/speech-only, non-coding senior, geo-ineligible,
+  title-chaser) and a behavioral availability multiplier. The skills array is
+  treated as noise (uniform in this dataset) and used only for honeypot detection.
+  An A/B test on a 200-candidate hand-labeled set showed a MiniLM JD-cosine
+  feature, blended at weight 0.10, lifts the contest composite 0.84 -> 0.89
+  (NDCG@10 0.80 -> 0.87), so it was adopted; the model runs locally (ONNX, CPU,
+  offline). Per-candidate reasoning is generated only from fields the scorer read.
+  Full 100K run: ~140s, CPU, no network.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
