@@ -3,3 +3,7 @@ __pycache__/
 candidates.jsonl
 candidates.jsonl.gz
 .venv/
+
+# Embedding model cache (~87 MB) — populated at build time by
+# scripts/fetch_model.py / the Dockerfile, never committed.
+models/

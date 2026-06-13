@@ -17,7 +17,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src.loader import iter_candidates
 from src.filters import honeypot_flags, passes_relevance_gate
-from src.scoring import score_candidate
+from src.scoring import score_candidate, _career_text
+from src import embedding
 
 TOP_N = 100
 
@@ -40,9 +41,25 @@ def run(candidates_path, out_path, verbose=True):
         score, evidence = score_candidate(cand)
         scored.append((score, cand["candidate_id"], cand, evidence))
 
-    # Highest score first; equal scores ordered by candidate_id ascending
+    # Highest rules score first; equal scores ordered by candidate_id ascending
     # (the validator enforces exactly this tie-break).
     scored.sort(key=lambda x: (-x[0], x[1]))
+
+    # Embedding blend (Phase 4, adopted): refine the ordering with a MiniLM
+    # JD-cosine feature. Only the rules top-K are embedded — the blend adds at
+    # most EMBED_WEIGHT, so nothing outside the rules top-K can reach the
+    # top-100 (keeps us inside the 5-min budget). Degrades to rules-only if the
+    # model/deps are absent, so the repo always runs.
+    use_embed = embedding.is_available()
+    if use_embed:
+        k = min(embedding.EMBED_TOPK, len(scored))
+        feats = embedding.embed_features(_career_text(row[2]) for row in scored[:k])
+        for i, f in enumerate(feats):
+            s, cid, cand, ev = scored[i]
+            ev["embed_feature"] = round(f, 4)
+            scored[i] = (embedding.blend(s, f), cid, cand, ev)
+        scored.sort(key=lambda x: (-x[0], x[1]))
+
     top = scored[:TOP_N]
 
     with open(out_path, "w", encoding="utf-8", newline="") as f:
@@ -53,7 +70,8 @@ def run(candidates_path, out_path, verbose=True):
 
     if verbose:
         elapsed = time.time() - t0
-        print(f"pool: {total} | honeypots: {honeypots} | gated out: {gated_out} | scored: {len(scored)}")
+        mode = "rules+embed blend" if use_embed else "rules-only (no embed model)"
+        print(f"pool: {total} | honeypots: {honeypots} | gated out: {gated_out} | scored: {len(scored)} | {mode}")
         print(f"wrote top {len(top)} to {out_path} in {elapsed:.1f}s")
         print("\ntop 10 preview:")
         for rank, (score, cid, cand, evidence) in enumerate(top[:10], start=1):

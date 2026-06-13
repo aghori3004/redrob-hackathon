@@ -21,7 +21,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.filters import honeypot_flags, passes_relevance_gate
-from src.scoring import score_candidate
+from src.scoring import score_candidate, _career_text
+from src import embedding
 
 EVAL_DIR = Path(__file__).parent
 
@@ -63,11 +64,25 @@ def evaluate():
                 continue
             if honeypot_flags(cand) or not passes_relevance_gate(cand):
                 score = -1.0  # filtered out = ranked below everything scored
+                cand = None
             else:
                 score, _ = score_candidate(cand)
-            scored.append((score, cid))
+            scored.append((score, cid, cand))
 
+    # Mirror rank.py's embedding blend so local metrics reflect the shipped
+    # pipeline. Gated/honeypot rows (cand is None) stay rules-only at -1.
     scored.sort(key=lambda x: (-x[0], x[1]))
+    if embedding.is_available():
+        k = min(embedding.EMBED_TOPK, len(scored))
+        embeddable = [(i, row[2]) for i, row in enumerate(scored[:k]) if row[2] is not None]
+        if embeddable:
+            feats = embedding.embed_features(_career_text(c) for _, c in embeddable)
+            for (i, _), f in zip(embeddable, feats):
+                s, cid, cand = scored[i]
+                scored[i] = (embedding.blend(s, f), cid, cand)
+        scored.sort(key=lambda x: (-x[0], x[1]))
+
+    scored = [(s, cid) for s, cid, _ in scored]
     ranked_tiers = [labels[cid] for _, cid in scored]
     ranked_rel = [1 if t >= 3 else 0 for t in ranked_tiers]
 
