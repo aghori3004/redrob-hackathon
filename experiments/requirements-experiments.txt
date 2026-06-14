@@ -1,0 +1,7 @@
+# Dev-time only — for experiments/methodologies_ab.py (the methodology A/B
+# benchmark). NOT required by the production ranking path (rank.py is stdlib +
+# the optional src/embedding.py MiniLM blend). Install into your dev env:
+#     pip install -r experiments/requirements-experiments.txt
+fastembed>=0.8,<0.9   # ONNX/CPU embeddings + cross-encoder reranker (already used by src/embedding.py)
+numpy>=1.24
+xgboost>=2.0          # LambdaMART / rank:pairwise learning-to-rank variant
