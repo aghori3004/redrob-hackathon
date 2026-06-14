@@ -31,7 +31,9 @@ MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 MODEL_CACHE = Path(__file__).parent.parent / "models"
 
 # Distilled from job_description.docx — the must-haves only, kept short so it
-# fits MiniLM's context and isn't diluted by the JD's long narrative.
+# fits MiniLM's context and isn't diluted by the JD's long narrative. Retained
+# as the legacy single-query (the A/B baseline); the shipped feature is now the
+# two-query max-pool below.
 JD_QUERY = (
     "Senior AI engineer owning production ranking, retrieval and recommendation "
     "systems that decide what recruiters and candidates see. Deep ML systems "
@@ -41,13 +43,38 @@ JD_QUERY = (
     "fast at a product company. 5 to 9 years experience, India based."
 )
 
+# Multi-query split (adopted): one query for the JD's hard must-haves, one for
+# the "ideal candidate" colour. Per candidate we take the MAX of the two
+# cosines, so a profile can match on either axis. The methodology A/B
+# (experiments/methodologies_ab.py) measured this lifting the local composite
+# 0.8911 -> ~0.9057 vs the single JD_QUERY, using the SAME MiniLM model and
+# blend weight (no new dependency, ~same runtime). The gain is within the
+# labeled set's bootstrap noise (only 30 relevant / 9 top-tier labels), so
+# treat it as a small, free refinement rather than a proven win.
+JD_MUST = (
+    "Production ranking, retrieval and recommendation systems: learning-to-rank, "
+    "hybrid sparse and dense retrieval, semantic and vector search, BM25, embeddings, "
+    "LLM-based re-ranking, evaluation with NDCG, MRR and offline-online A/B testing."
+)
+JD_IDEAL = (
+    "Scrappy senior AI engineer who ships a working ranker fast at a product company; "
+    "5 to 9 years experience; India based; fine-tuning and deep ML systems depth."
+)
+
 EMBED_WEIGHT = 0.10          # blend weight chosen by the A/B test
 EMBED_TOPK = 3000            # only embed the rules top-K (budget guard)
-EMBED_COS_FLOOR = 0.45       # cosine->feature transform, from JD-cosine geometry
+EMBED_COS_FLOOR = 0.45       # legacy single JD_QUERY cosine->feature transform
 EMBED_COS_SPAN = 0.32
+# Max-pool(must, ideal) cosine->feature transform. Calibrated set-INDEPENDENTLY
+# from pool geometry (4,000 gate-passing candidates: p5=0.40, p99=0.567), NOT
+# from labels, so it is identical in eval and on the full pool — no leakage.
+MQ_COS_FLOOR = 0.40
+MQ_COS_SPAN = 0.167
 
 _model = None
 _jd_vec = None
+_must_vec = None
+_ideal_vec = None
 
 
 def is_available():
@@ -68,8 +95,13 @@ def _cache_populated():
     return MODEL_CACHE.exists() and any(MODEL_CACHE.rglob("*.onnx"))
 
 
+def _unit(np, v):
+    v = np.asarray(v, dtype="float32")
+    return v / (np.linalg.norm(v) + 1e-9)
+
+
 def _get_model():
-    global _model, _jd_vec
+    global _model, _jd_vec, _must_vec, _ideal_vec
     if _model is not None:
         return _model
     import numpy as np
@@ -82,22 +114,31 @@ def _get_model():
         os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
     MODEL_CACHE.mkdir(exist_ok=True)
     _model = TextEmbedding(MODEL_NAME, cache_dir=str(MODEL_CACHE))
-    v = np.asarray(list(_model.embed([JD_QUERY]))[0], dtype="float32")
-    _jd_vec = v / (np.linalg.norm(v) + 1e-9)
+    qm, qi, qj = list(_model.embed([JD_MUST, JD_IDEAL, JD_QUERY]))
+    _must_vec = _unit(np, qm)
+    _ideal_vec = _unit(np, qi)
+    _jd_vec = _unit(np, qj)   # retained for the A/B experiment / fallback
     return _model
 
 
 def _cos_to_feature(cos):
+    """Legacy single JD_QUERY cosine -> feature (kept for the A/B experiment)."""
     f = (cos - EMBED_COS_FLOOR) / EMBED_COS_SPAN
+    return 0.0 if f < 0 else 1.0 if f > 1 else float(f)
+
+
+def _mq_to_feature(cos):
+    f = (cos - MQ_COS_FLOOR) / MQ_COS_SPAN
     return 0.0 if f < 0 else 1.0 if f > 1 else float(f)
 
 
 def embed_features(texts, batch_size=256):
     """Return a list of embed features in [0,1], one per input text.
 
-    Cosine of each text's MiniLM embedding to the JD query, passed through
-    the fixed transform. Raises if the model is unavailable — callers should
-    guard with is_available() first.
+    Each text's MiniLM embedding is compared to BOTH the must-have and the
+    ideal JD queries; we take the max cosine (a profile may match on either
+    axis) and pass it through the fixed, set-independent transform. Raises if
+    the model is unavailable — callers should guard with is_available() first.
     """
     import numpy as np
     model = _get_model()
@@ -105,8 +146,8 @@ def embed_features(texts, batch_size=256):
     if vecs.ndim == 1:  # single text edge case
         vecs = vecs[None, :]
     vecs /= (np.linalg.norm(vecs, axis=1, keepdims=True) + 1e-9)
-    cosims = vecs @ _jd_vec
-    return [_cos_to_feature(c) for c in cosims]
+    cos_max = np.maximum(vecs @ _must_vec, vecs @ _ideal_vec)
+    return [_mq_to_feature(c) for c in cos_max]
 
 
 def blend(rules_score, embed_feature):
