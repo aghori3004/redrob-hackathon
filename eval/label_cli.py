@@ -109,6 +109,12 @@ def main():
     parser.add_argument("--queue", action="store_true",
                         help="use the old top-50 submission queue (label_queue.jsonl) instead of a random draw")
     parser.add_argument("--seed", type=int, default=42, help="shuffle seed for the random draw (change to reshuffle)")
+    parser.add_argument("--blind", action="store_true",
+                        help="hide the model's suggested tier so your judgment can't anchor to the scorer "
+                             "(de-biases the eval; the suggestion is still recorded silently for agreement analysis)")
+    parser.add_argument("--order", choices=("random", "model"), default="random",
+                        help="random (default) = draw across all strata; model = highest model-score first, "
+                             "so you label the TOP of the ranking (where NDCG@10 value and positives concentrate)")
     args = parser.parse_args()
 
     if args.queue:
@@ -116,8 +122,14 @@ def main():
         mode = "submission top-50 (rank order)"
     else:
         pool = load_records(SAMPLE, "sample (run make_worksheet.py / label_tool.py first)")
-        random.Random(args.seed).shuffle(pool)
-        mode = f"random draw across all strata (seed {args.seed})"
+        if args.order == "model":
+            pool.sort(key=lambda c: suggest_tier(c)[2], reverse=True)
+            mode = "model-score descending (top of ranking first)"
+        else:
+            random.Random(args.seed).shuffle(pool)
+            mode = f"random draw across all strata (seed {args.seed})"
+    if args.blind:
+        mode += " | BLIND (suggestion hidden)"
 
     labels = load_labels()
     human_ids = {cid for cid, r in labels.items() if r.get("source") == "human"}
@@ -148,13 +160,22 @@ def main():
         print("\n" + "-" * 80)
         print(JOB_WANTS)
         print("-" * 80)
-        print(f">> MODEL SUGGESTS:  TIER {sug_tier}   (rules score {model_score})")
-        print(f"   reasoning: {sug_reason}")
-        print("-" * 80)
+        if args.blind:
+            print(">> BLIND: judge cold, then enter your tier (the model's view is hidden).")
+            print("-" * 80)
+            prompt = "0-5=tier  |  s skip  b back  q quit > "
+        else:
+            print(f">> MODEL SUGGESTS:  TIER {sug_tier}   (rules score {model_score})")
+            print(f"   reasoning: {sug_reason}")
+            print("-" * 80)
+            prompt = f"[Enter]=accept tier {sug_tier}  |  0-5=override  |  s skip  b back  q quit > "
 
-        raw = input(f"[Enter]=accept tier {sug_tier}  |  0-5=override  |  s skip  b back  q quit > ").strip()
+        raw = input(prompt).strip()
 
-        if raw == "":  # accept the suggestion
+        if raw == "":  # accept the suggestion (disabled in blind mode — nothing shown to accept)
+            if args.blind:
+                print("  blind mode: type a digit 0-5 (no suggestion to accept)")
+                continue
             labels[cid] = {"candidate_id": cid, "tier": sug_tier, "model_tier": sug_tier,
                            "agreed": True, "note": "", "source": "human"}
             save_labels(labels)
